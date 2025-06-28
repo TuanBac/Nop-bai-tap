@@ -6,14 +6,14 @@ USE adventureworks;
 SELECT p.`name` 
 FROM product p 
 WHERE p.ProductSubcategoryID IN (SELECT ps.ProductSubcategoryID
-								FROM ProductSubcategory ps 
-								WHERE ps.`name` = 'Saddles'); 
+				FROM ProductSubcategory ps 
+				WHERE ps.`name` = 'Saddles'); 
 -- Question 2: Thay đổi câu Query 1 để lấy được kết quả sau.
 SELECT p.`name` 
 FROM product p 
 WHERE p.ProductSubcategoryID IN (SELECT ps.ProductSubcategoryID
-								FROM ProductSubcategory ps 
-								WHERE ps.`name` LIKE "Bo%"); 
+				FROM ProductSubcategory ps 
+				WHERE ps.`name` LIKE "Bo%"); 
 -- Question 3: Viết câu query trả về tất cả các sản phẩm có giá rẻ nhất (lowest ListPrice) và Touring Bike (nghĩa là ProductSubcategoryID = 3)
 SELECT p.`name` FROM product p
 WHERE p.ListPrice = (SELECT MIN(p.ListPrice) FROM product) AND p.ProductSubcategoryID = 3;
