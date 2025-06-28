@@ -38,8 +38,8 @@ FROM salesperson s
 JOIN salesorderheader so
 ON s.SalesPersonID = so.SalesPersonID;
 -- Question 4: Sử dụng câu query ở question 3, thêm cột JobTitle and xóa cột SalesPersonID và BusinessEntityID.
-SELECT so.SalesOrderID, so.OrderDate, s.Bonus, s.SalesYTD
+SELECT so.SalesOrderID, so.OrderDate, e.Title AS JobTitle, s.Bonus, s.SalesYTD
 FROM salesperson s
-JOIN salesorderheader so
-ON s.SalesPersonID = so.SalesPersonID;
+JOIN salesorderheader so ON s.SalesPersonID = so.SalesPersonID
+JOIN employee e ON e.EmployeeID = s.SalesPersonID;
 
