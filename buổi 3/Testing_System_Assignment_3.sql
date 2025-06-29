@@ -62,6 +62,15 @@ JOIN `Position` p ON p.Position_ID = a.Position_ID
 JOIN Department d ON a.Department_ID = d.Department_ID
 WHERE p.Position_name IN ('dev', 'test', 'scrum master', 'PM')
 GROUP BY d.Department_ID, p.Position_ID;
+
+SELECT
+ d.Department_ID, d.Department_Name,
+ (SELECT COUNT(*) FROM `Account` a JOIN `Position` p ON a.Position_ID = p.Position_ID WHERE department_id = d.department_id AND p.Position_name = 'dev') AS 'Dev',
+ (SELECT COUNT(*) FROM `Account` a JOIN `Position` p ON a.Position_ID = p.Position_ID WHERE department_id = d.department_id AND p.Position_name = 'PM') AS 'PM',
+ (SELECT COUNT(*) FROM `Account` a JOIN `Position` p ON a.Position_ID = p.Position_ID WHERE department_id = d.department_id AND p.Position_name = 'Scrum Master') AS 'scrum master',
+ (SELECT COUNT(*) FROM `Account` a JOIN `Position` p ON a.Position_ID = p.Position_ID WHERE department_id = d.department_id AND p.Position_name = 'test') AS 'Test'
+FROM Department d
+GROUP BY d.Department_ID, d.Department_Name; 
 -- Question 12: Lấy thông tin chi tiết của câu hỏi bao gồm: thông tin cơ bản của question, loại câu hỏi, ai là người tạo ra câu hỏi, câu trả lời là gì
 SELECT q.Content, q.Question_ID, t.Type_name, a.fullname AS 'Người tạo', cq.Category_Name, an.Content AS 'Câu trả lời'
 FROM Question q
