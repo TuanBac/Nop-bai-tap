@@ -244,3 +244,36 @@ DELIMITER ;
 
 -- Question 13: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong 6 tháng gần đây nhất  
 -- (Nếu tháng nào không có thì sẽ in ra là "không có câu hỏi nào trong  tháng") 
+DROP PROCEDURE IF EXISTS sp_CountQuesBefore6Month;
+DELIMITER //
+CREATE PROCEDURE sp_CountQuesBefore6Month()
+BEGIN
+    WITH CTE_Last6Months AS (
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 5 MONTH)) AS MONTH,
+               YEAR(DATE_SUB(NOW(), INTERVAL 5 MONTH)) AS YEAR
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 4 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 4 MONTH))
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 3 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 3 MONTH))
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 2 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 2 MONTH))
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+        UNION
+        SELECT MONTH(NOW()), YEAR(NOW())
+    )
+    SELECT 
+        M.MONTH,
+        M.YEAR,
+        CASE
+            WHEN COUNT(q.Question_ID) = 0 THEN 'không có câu hỏi nào trong tháng'
+            ELSE CAST(COUNT(q.Question_ID) AS CHAR)
+        END AS SL
+    FROM CTE_Last6Months M
+    LEFT JOIN Question q
+        ON M.MONTH = MONTH(q.CreateDate) AND M.YEAR = YEAR(q.CreateDate)
+    GROUP BY M.YEAR, M.MONTH
+    ORDER BY M.YEAR ASC, M.MONTH ASC;
+END //
+DELIMITER ;
+CALL sp_CountQuesBefore6Month();
