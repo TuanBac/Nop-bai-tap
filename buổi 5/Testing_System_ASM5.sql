@@ -51,10 +51,10 @@ BEGIN
     JOIN question q ON t.type_ID = q.type_ID
     GROUP BY t.type_ID
     HAVING COUNT(q.Question_ID) = (SELECT MAX(So_cauhoi)
-									FROM ( SELECT COUNT(q.Question_ID) AS So_cauhoi
-											FROM Question q 
-											GROUP BY q.type_ID) AS MaxQuestion
-									);
+				   FROM ( SELECT COUNT(q.Question_ID) AS So_cauhoi
+					  FROM Question q 
+					  GROUP BY q.type_ID) AS MaxQuestion
+				   );
 END
  // DELIMITER ;
 SET @max_typeid = 0;
@@ -133,9 +133,9 @@ BEGIN
     JOIN Typequestion t ON q.type_ID = t.type_ID
     WHERE t.type_name = in_typename
     AND CHAR_LENGTH(q.Content) = (SELECT MAX(CHAR_LENGTH(q2.Content)) -- từng loại không phải cả bảng 
-									FROM Question q2
-									JOIN Typequestion t2 ON q2.type_ID = t2.type_ID
-                                    WHERE t2.type_name = in_typename);
+				  FROM Question q2
+				  JOIN Typequestion t2 ON q2.type_ID = t2.type_ID
+                                  WHERE t2.type_name = in_typename);
 END //
 DELIMITER ;
 CALL sp_f_longestcontent('Essay');
