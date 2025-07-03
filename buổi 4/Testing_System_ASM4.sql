@@ -21,11 +21,11 @@ FROM `Account` a JOIN Groupaccount ga
 ON a.Account_ID = ga.Account_ID
 GROUP BY a.Account_ID, a.Fullname
 HAVING COUNT(ga.Group_ID) = (SELECT MAX(COUNT(ga.Group_ID))
-						FROM 
-						(SELECT COUNT(ga.Group_ID)
-                        FROM Groupaccount ga
-                        GROUP BY ga.Account_ID) AS Sub
-                        );                      
+				   FROM 
+					(SELECT COUNT(ga.Group_ID)
+	                                 FROM Groupaccount ga
+	                                 GROUP BY ga.Account_ID) AS Sub
+	                     );                      
 SELECT * FROM v_account;
 
 WITH thamgianhieugroupnhat AS(
@@ -34,11 +34,11 @@ FROM `Account` a JOIN Groupaccount ga
 ON a.Account_ID = ga.Account_ID
 GROUP BY a.Account_ID, a.Fullname
 HAVING COUNT(ga.Group_ID) = (SELECT MAX(COUNT(ga.Group_ID))
-						FROM 
-						(SELECT COUNT(ga.Group_ID)
-                        FROM Groupaccount ga
-                        GROUP BY ga.Account_ID) AS Sub
-                        )
+			     FROM 
+				(SELECT COUNT(ga.Group_ID)
+                                  FROM Groupaccount ga
+                                  GROUP BY ga.Account_ID) AS Sub
+                             )
 )
 SELECT * FROM thamgianhieugroupnhat;
 -- Question 3: Tạo view có chứa câu hỏi có những content quá dài (content quá 300 từ được coi là quá dài) và xóa nó đi
@@ -55,11 +55,11 @@ FROM Department d JOIN `Account` a
 ON d.Department_ID = a.Department_ID
 GROUP BY d.Department_ID, d.Department_name
 HAVING COUNT(a.Account_ID) = (SELECT MAX(COUNT(a.Account_ID)) 
-							   FROM 
-							  (SELECT COUNT(a.Account_ID)
-							   FROM `Account` a 
-							   GROUP BY a.Department_ID) AS Sub
-								);
+				FROM 
+				(SELECT COUNT(a.Account_ID)
+				FROM `Account` a 
+				GROUP BY a.Department_ID) AS Sub
+			      );
 SELECT * FROM v_department;
 -- Question 5: Tạo view có chứa tất các các câu hỏi do user họ Nguyễn tạo
 CREATE OR REPLACE VIEW v_nguyen AS

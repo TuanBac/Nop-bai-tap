@@ -6,14 +6,14 @@ USE adventureworks;
 SELECT p.`name` 
 FROM product p 
 WHERE p.ProductSubcategoryID IN (SELECT ps.ProductSubcategoryID
-								FROM ProductSubcategory ps 
-								WHERE ps.`name` = 'Saddles'); 
+				FROM ProductSubcategory ps 
+				WHERE ps.`name` = 'Saddles'); 
 -- Question 2: Thay đổi câu Query 1 để lấy được kết quả sau.
 SELECT p.`name` 
 FROM product p 
 WHERE p.ProductSubcategoryID IN (SELECT ps.ProductSubcategoryID
-								FROM ProductSubcategory ps 
-								WHERE ps.`name` LIKE "Bo%"); 
+				FROM ProductSubcategory ps 
+				WHERE ps.`name` LIKE "Bo%"); 
 -- Question 3: Viết câu query trả về tất cả các sản phẩm có giá rẻ nhất (lowest ListPrice) và Touring Bike (nghĩa là ProductSubcategoryID = 3)
 SELECT p.`name` FROM product p
 WHERE p.ListPrice = (SELECT MIN(p.ListPrice) FROM product) AND p.ProductSubcategoryID = 3;
@@ -38,8 +38,8 @@ FROM salesperson s
 JOIN salesorderheader so
 ON s.SalesPersonID = so.SalesPersonID;
 -- Question 4: Sử dụng câu query ở question 3, thêm cột JobTitle and xóa cột SalesPersonID và BusinessEntityID.
-SELECT so.SalesOrderID, so.OrderDate, s.Bonus, s.SalesYTD
+SELECT so.SalesOrderID, so.OrderDate, e.Title AS JobTitle, s.Bonus, s.SalesYTD
 FROM salesperson s
-JOIN salesorderheader so
-ON s.SalesPersonID = so.SalesPersonID;
+JOIN salesorderheader so ON s.SalesPersonID = so.SalesPersonID
+JOIN employee e ON e.EmployeeID = s.SalesPersonID;
 
