@@ -51,10 +51,10 @@ BEGIN
     JOIN question q ON t.type_ID = q.type_ID
     GROUP BY t.type_ID
     HAVING COUNT(q.Question_ID) = (SELECT MAX(So_cauhoi)
-									FROM ( SELECT COUNT(q.Question_ID) AS So_cauhoi
-											FROM Question q 
-											GROUP BY q.type_ID) AS MaxQuestion
-									);
+				   FROM ( SELECT COUNT(q.Question_ID) AS So_cauhoi
+					  FROM Question q 
+					  GROUP BY q.type_ID) AS MaxQuestion
+				   );
 END
  // DELIMITER ;
 SET @max_typeid = 0;
@@ -133,9 +133,9 @@ BEGIN
     JOIN Typequestion t ON q.type_ID = t.type_ID
     WHERE t.type_name = in_typename
     AND CHAR_LENGTH(q.Content) = (SELECT MAX(CHAR_LENGTH(q2.Content)) -- từng loại không phải cả bảng 
-									FROM Question q2
-									JOIN Typequestion t2 ON q2.type_ID = t2.type_ID
-                                    WHERE t2.type_name = in_typename);
+				  FROM Question q2
+				  JOIN Typequestion t2 ON q2.type_ID = t2.type_ID
+                                  WHERE t2.type_name = in_typename);
 END //
 DELIMITER ;
 CALL sp_f_longestcontent('Essay');
@@ -244,3 +244,36 @@ DELIMITER ;
 
 -- Question 13: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong 6 tháng gần đây nhất  
 -- (Nếu tháng nào không có thì sẽ in ra là "không có câu hỏi nào trong  tháng") 
+DROP PROCEDURE IF EXISTS sp_CountQuesBefore6Month;
+DELIMITER //
+CREATE PROCEDURE sp_CountQuesBefore6Month()
+BEGIN
+    WITH CTE_Last6Months AS (
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 5 MONTH)) AS MONTH,
+               YEAR(DATE_SUB(NOW(), INTERVAL 5 MONTH)) AS YEAR
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 4 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 4 MONTH))
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 3 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 3 MONTH))
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 2 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 2 MONTH))
+        UNION
+        SELECT MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH)), YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+        UNION
+        SELECT MONTH(NOW()), YEAR(NOW())
+    )
+    SELECT 
+        M.MONTH,
+        M.YEAR,
+        CASE
+            WHEN COUNT(q.Question_ID) = 0 THEN 'không có câu hỏi nào trong tháng'
+            ELSE CAST(COUNT(q.Question_ID) AS CHAR)
+        END AS SL
+    FROM CTE_Last6Months M
+    LEFT JOIN Question q
+        ON M.MONTH = MONTH(q.CreateDate) AND M.YEAR = YEAR(q.CreateDate)
+    GROUP BY M.YEAR, M.MONTH
+    ORDER BY M.YEAR ASC, M.MONTH ASC;
+END //
+DELIMITER ;
+CALL sp_CountQuesBefore6Month();
