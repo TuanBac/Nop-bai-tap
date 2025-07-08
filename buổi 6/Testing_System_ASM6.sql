@@ -79,49 +79,6 @@ DELIMITER ;
 -- Question 5: Tạo trigger không cho phép người dùng xóa tài khoản có email là "admin@gmail.com" (đây là tài khoản admin, không cho phép user xóa),
 -- còn lại các tài khoản khác thì sẽ cho phép xóa và sẽ xóa tất cả các thông tin liên quan tới user đó
 
--- chỉnh DELETE CASCADE trên các bảng liên quan
-ALTER TABLE Examquestion 
-DROP FOREIGN KEY examquestion_ibfk_1;
-ALTER TABLE Examquestion
-ADD CONSTRAINT examquestion_ibfk_1
-FOREIGN KEY (Exam_ID) REFERENCES Exam(Exam_ID)
-ON DELETE CASCADE;
-
-ALTER TABLE `Group`
-DROP FOREIGN KEY group_ibfk_1;
-ALTER TABLE `Group`
-ADD CONSTRAINT group_ibfk_1
-FOREIGN KEY (Creator_ID) REFERENCES `Account`(Account_ID)
-ON DELETE CASCADE;
-
-ALTER TABLE `Groupaccount`
-DROP FOREIGN KEY groupaccount_ibfk_1;
-ALTER TABLE `Groupaccount`
-ADD CONSTRAINT groupaccount_ibfk_1
-FOREIGN KEY (Group_ID) REFERENCES `Group`(Group_ID)
-ON DELETE CASCADE;
-
-ALTER TABLE `Question`
-DROP FOREIGN KEY question_ibfk_3;
-ALTER TABLE `Question`
-ADD CONSTRAINT question_ibfk_3
-FOREIGN KEY (Creator_ID) REFERENCES `Account`(Account_ID)
-ON DELETE CASCADE;
-
-ALTER TABLE `Answer`
-DROP FOREIGN KEY answer_ibfk_1;
-ALTER TABLE `Answer`
-ADD CONSTRAINT answer_ibfk_1
-FOREIGN KEY (Question_ID) REFERENCES `Question`(Question_ID)
-ON DELETE CASCADE;
-
-ALTER TABLE Examquestion 
-DROP FOREIGN KEY examquestion_ibfk_2;
-ALTER TABLE Examquestion
-ADD CONSTRAINT examquestion_ibfk_2
-FOREIGN KEY (Question_ID) REFERENCES Question(Question_ID)
-ON DELETE CASCADE;
--- tạo trigger 
 DROP TRIGGER IF EXISTS trigger_del_account
 DELIMITER //
 CREATE TRIGGER trigger_del_account
