@@ -125,4 +125,14 @@ END
 // DELIMITER ;
 CALL processing_module(3);
 -- Viết hàm (có parameter) trả về thông tin 1 nhân viên đã tham gia làm mặc dù không ai giao việc cho nhân viên đó (trong bảng Works)
- 
+ DROP PROCEDURE IF EXISTS workdone_but_nothavejob
+ DELIMITER //
+ CREATE PROCEDURE workdone_but_nothavejob( IN in_employeeid INT)
+ BEGIN 
+	SELECT e.EmployeeFirstName, e.EmployeeLastName FROM employee e
+    JOIN work_done w ON e.EmployeeID = w.EmployeeID
+    WHERE e.EmployeeID = in_employeeid
+    AND e.EmployeeID NOT IN (SELECT pm.employeeid FROM project_modules pm);
+END
+// DELIMITER ;
+CALL workdone_but_nothavejob(2);
